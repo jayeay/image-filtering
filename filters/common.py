@@ -5,9 +5,10 @@ from pathlib import Path
 
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IMAGE = ROOT / "foto" / "tayama.jpg"
+DEFAULT_IMAGE = ROOT / "images" / "living.jpg"
 DEFAULT_OUTPUT = ROOT / "outputs"
 
 
@@ -25,10 +26,10 @@ def read_image(image_path=DEFAULT_IMAGE):
 def save_comparison(images, titles, filename, output_dir=DEFAULT_OUTPUT, show=True):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    figure = plt.figure(figsize=(12, 4))
+    figure = plt.figure(figsize=(12, 8) if len(images) == 3 else (12, 4))
     try:
         for n, (image, title) in enumerate(zip(images, titles), start=1):
-            plt.subplot(1, 5, n)
+            plt.subplot(1, len(images), n)
             plt.imshow(image, cmap="gray", vmin=0, vmax=255)
             plt.title(title, fontsize=9)
             plt.axis("off")
@@ -53,3 +54,30 @@ def cli(main):
         main(image_path=args.image, output_dir=args.output_dir, show=not args.no_show)
     except (ValueError, OSError, cv2.error) as error:
         parser.exit(1, f"Error: {error}\n")
+
+
+def add_noise(image, seed=42):
+    """Salt and Pepper Noise: probabilitas hitam 2%, putih 2%."""
+    noisy = image.copy()
+    noise_mask = np.random.default_rng(seed).random(image.shape[:2])
+    noisy[noise_mask < 0.02] = 0
+    noisy[noise_mask > 0.98] = 255
+    return noisy
+
+
+def run_filter(image_path, output_dir, show, apply_filters, titles, filenames, comparison):
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    image = read_image(image_path)
+    noisy = add_noise(image)
+    results = apply_filters(noisy)
+    paths = []
+    for result, filename in zip(results, filenames):
+        path = output_dir / filename
+        if not cv2.imwrite(str(path), result):
+            raise OSError(f"Tidak dapat menyimpan citra: {path}")
+        print(f"Tersimpan: {path.resolve()}")
+        paths.append(path)
+    save_comparison([image, noisy, *results], ["Citra Asli", "Citra Noisy", *titles],
+                    comparison, output_dir, show)
+    return paths

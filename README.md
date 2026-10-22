@@ -1,46 +1,58 @@
 # Digital Image Filtering
 
-Praktikum Python untuk Low Pass, High Pass, Median, dan Gaussian Filter menggunakan OpenCV, NumPy, serta Matplotlib. Setiap hasil memuat lima panel grayscale dalam figure 12 × 4 inci.
+Implementasi praktikum sesuai [PRD V2](PRD-V2.MD), menggunakan Python, OpenCV, NumPy, dan Matplotlib. Program berjalan melalui terminal tanpa framework web.
 
-## Instalasi dan penggunaan
+## Instalasi
 
-Gunakan Python 3.10 atau lebih baru. Dari folder proyek:
+Gunakan Python 3.10 atau lebih baru:
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
+```
+
+## Menjalankan
+
+```powershell
 python run_all.py
-```
-
-Semua PNG disimpan terlebih dahulu, kemudian empat jendela visualisasi ditampilkan dengan satu pemanggilan `plt.show()`. Tutup jendela untuk menyelesaikan program. Untuk terminal tanpa tampilan grafis:
-
-```powershell
 python run_all.py --no-show
-```
-
-Jalankan setiap metode secara mandiri:
-
-```powershell
 python -m filters.low_pass
 python -m filters.high_pass
 python -m filters.median
 python -m filters.gaussian
 ```
 
-Semua perintah mendukung `--no-show`, `--image "C:\path\foto.jpg"`, dan `--output-dir "C:\path\hasil"`. Lokasi default ditentukan relatif terhadap source code, sehingga tidak bergantung pada direktori terminal. Dari direktori lain, jalankan `run_all.py` dengan path absolut.
+Semua perintah menerima `--image`, `--output-dir`, dan `--no-show`. Contoh:
 
-## Input dan hasil
+```powershell
+python -m filters.median --image foto/tayama.jpg --output-dir outputs --no-show
+```
 
-`foto/living.jpg` adalah **citra contoh sintetis ruang tayama**, dibuat dengan bentuk geometris OpenCV, bukan foto asli pengguna. Ganti file tersebut dengan foto Anda atau gunakan `--image`. Input dikonversi ke grayscale; panel citra asli juga grayscale sesuai acceptance criteria. File asli tidak diubah.
+Input default adalah `images/living.jpg`, salinan gambar `foto/tayama.jpg` yang digunakan proyek sebelum revisi. Nama file mengikuti PRD; gambar ini bukan citra sintetis ruang tamu. Input dibaca sebagai grayscale uint8 dan tidak ditimpa. Path default relatif terhadap source code, sehingga runner dapat dipanggil menggunakan path absolut dari direktori lain. File hilang/rusak menghasilkan pesan error dan exit code 1.
 
-| Metode | Variasi | Output |
+## Metode dan output
+
+Seluruh metode menerima Salt and Pepper Noise identik: generator lokal `default_rng(42)`, mask `< 0.02` menjadi hitam, mask `> 0.98` menjadi putih. Probabilitas total noise 4%; jumlah piksel yang berubah tidak harus tepat 4%.
+
+| Metode | Parameter | Citra hasil (grayscale, ukuran sama dengan input) |
 | --- | --- | --- |
-| LPF | Kernel rata-rata 3×3, 5×5, 7×7 | `outputs/lpf_result.png` |
-| HPF | Laplacian 4-neighbor, 8-neighbor, sharpening | `outputs/hpf_result.png` |
-| Median | Salt and Pepper Noise, median 3×3, 5×5, 7×7 | `outputs/median_result.png` |
-| Gaussian | Gaussian Noise, blur 3×3, 5×5, 7×7 | `outputs/gaussian_result.png` |
+| LPF | Tiga kernel 3?3: berbobot, pusat 1/5, rata-rata | `hasil_lpf1.png`, `hasil_lpf2.png`, `hasil_lpf3.png` |
+| HPF | 8-neighbor pusat 8, 4-neighbor pusat 5, diagonal | `hasil_hpf1.png`, `hasil_hpf2.png`, `hasil_hpf3.png` |
+| Median | Kernel 3?3 | `hasil_mf.png` |
+| Gaussian | Kernel 3?3, sigmaX=1.0 | `hasil_gf.png` |
 
-Laplacian dihitung dalam float untuk mempertahankan respons negatif, lalu ditampilkan sebagai magnitudo yang dibatasi 0–255. Sharpening menggunakan intensitas yang dibatasi 0–255. Salt and Pepper Noise memiliki probabilitas total 5% (masing-masing 2,5% hitam/putih). Gaussian Noise menggunakan mean 0 dan simpangan baku 20. Keduanya memakai generator lokal dengan seed 42 agar hasil dapat diulang tanpa mengubah random state global.
+Semua hasil berada di `outputs/`. LPF/HPF menggunakan `CV_32F` dan `BORDER_CONSTANT` (padding nol). LPF dibulatkan dengan `np.rint`, sedangkan HPF dengan `np.floor(response + 0.5)`; keduanya dibatasi ke 0?255 dan dikonversi ke uint8. Respons negatif HPF dipotong ke nol sesuai PRD V2.
 
-File yang hilang atau tidak dapat dibaca menghasilkan pesan `Error:` dan exit code 1 tanpa traceback. PNG keluaran dengan nama yang sama diperbarui saat program dijalankan kembali.
+Empat PNG tambahan adalah visualisasi perbandingan: `perbandingan_lpf.png`, `perbandingan_hpf.png` (lima panel, 12?4 inci), `perbandingan_median.png`, dan `perbandingan_gaussian.png` (tiga panel, 12?8 inci). Visualisasi disimpan pada 150 dpi. Runner menyimpan seluruh output sebelum membuka empat visualisasi dengan satu `plt.show()`.
+
+## Laporan
+
+- [Tugas 1 - Image Filtering (LPF & HPF)](docs/LAPORAN_TUGAS_1.md)
+- [Tugas 2 - Image Filtering (Median dan Gaussian)](docs/LAPORAN_TUGAS_2.md)
+
+## Verifikasi
+
+```powershell
+python -m unittest discover -s tests -v
+```
