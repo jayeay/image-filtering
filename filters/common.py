@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_IMAGE = ROOT / "images" / "living.jpg"
+DEFAULT_IMAGE = ROOT / "images" / "tayama.jpg"
 DEFAULT_OUTPUT = ROOT / "outputs"
 
 

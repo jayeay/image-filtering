@@ -7,9 +7,9 @@
 
 ## Acuan dan lingkungan percobaan
 
-Laporan mengikuti [PRD V2](../PRD-V2.MD) dan implementasi aktual proyek. Dua PDF materi dosen yang disebut PRD tidak tersedia di folder proyek; matriks dan tahapan diambil dari PRD tersebut.
+Laporan mengikuti [PRD V2](PRD-V2.MD) dan implementasi aktual proyek. Dua PDF materi dosen yang disebut PRD tidak tersedia di folder proyek; matriks dan tahapan diambil dari PRD tersebut.
 
-Program menggunakan Python, OpenCV, NumPy, dan Matplotlib melalui terminal. Input adalah `images/living.jpg`, salinan `foto/tayama.jpg`, bukan gambar sintetis ruang tamu. Citra dibaca menggunakan `cv2.IMREAD_GRAYSCALE`, berukuran **597 baris ? 335 kolom**, bertipe **uint8**, dengan intensitas 0?255.
+Program menggunakan Python, OpenCV, NumPy, dan Matplotlib melalui terminal. Input adalah `images/tayama.jpg`. Citra dibaca menggunakan `cv2.IMREAD_GRAYSCALE`, berukuran **597 baris ? 335 kolom**, bertipe **uint8**, dengan intensitas 0?255.
 
 ## Persiapan citra dan noise
 

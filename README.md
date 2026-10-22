@@ -1,6 +1,6 @@
 # Digital Image Filtering
 
-Implementasi praktikum sesuai [PRD V2](PRD-V2.MD), menggunakan Python, OpenCV, NumPy, dan Matplotlib. Program berjalan melalui terminal tanpa framework web.
+Praktikum pengolahan citra digital menggunakan Python, OpenCV, NumPy, dan Matplotlib. Program berjalan melalui terminal tanpa framework web.
 
 ## Instalasi
 
@@ -26,10 +26,10 @@ python -m filters.gaussian
 Semua perintah menerima `--image`, `--output-dir`, dan `--no-show`. Contoh:
 
 ```powershell
-python -m filters.median --image foto/tayama.jpg --output-dir outputs --no-show
+python -m filters.median --image images/tayama.jpg --output-dir outputs --no-show
 ```
 
-Input default adalah `images/living.jpg`, salinan gambar `foto/tayama.jpg` yang digunakan proyek sebelum revisi. Nama file mengikuti PRD; gambar ini bukan citra sintetis ruang tamu. Input dibaca sebagai grayscale uint8 dan tidak ditimpa. Path default relatif terhadap source code, sehingga runner dapat dipanggil menggunakan path absolut dari direktori lain. File hilang/rusak menghasilkan pesan error dan exit code 1.
+Input default adalah `images/tayama.jpg`. Seluruh gambar input disimpan di folder `images/`; `images/chizuru.jpg` tersedia sebagai alternatif melalui `--image`. Input dibaca sebagai grayscale uint8 dan tidak ditimpa. Path default relatif terhadap source code, sehingga runner dapat dipanggil menggunakan path absolut dari direktori lain. File hilang/rusak menghasilkan pesan error dan exit code 1.
 
 ## Metode dan output
 
@@ -37,19 +37,14 @@ Seluruh metode menerima Salt and Pepper Noise identik: generator lokal `default_
 
 | Metode | Parameter | Citra hasil (grayscale, ukuran sama dengan input) |
 | --- | --- | --- |
-| LPF | Tiga kernel 3?3: berbobot, pusat 1/5, rata-rata | `hasil_lpf1.png`, `hasil_lpf2.png`, `hasil_lpf3.png` |
+| LPF | Tiga kernel 3x3: berbobot, pusat 1/5, rata-rata | `hasil_lpf1.png`, `hasil_lpf2.png`, `hasil_lpf3.png` |
 | HPF | 8-neighbor pusat 8, 4-neighbor pusat 5, diagonal | `hasil_hpf1.png`, `hasil_hpf2.png`, `hasil_hpf3.png` |
-| Median | Kernel 3?3 | `hasil_mf.png` |
-| Gaussian | Kernel 3?3, sigmaX=1.0 | `hasil_gf.png` |
+| Median | Kernel 3x3 | `hasil_mf.png` |
+| Gaussian | Kernel 3x3, sigmaX=1.0 | `hasil_gf.png` |
 
-Semua hasil berada di `outputs/`. LPF/HPF menggunakan `CV_32F` dan `BORDER_CONSTANT` (padding nol). LPF dibulatkan dengan `np.rint`, sedangkan HPF dengan `np.floor(response + 0.5)`; keduanya dibatasi ke 0?255 dan dikonversi ke uint8. Respons negatif HPF dipotong ke nol sesuai PRD V2.
+Semua hasil berada di `outputs/`. LPF/HPF menggunakan `CV_32F` dan `BORDER_CONSTANT` (padding nol). LPF dibulatkan dengan `np.rint`, sedangkan HPF dengan `np.floor(response + 0.5)`; keduanya dibatasi ke 0-255 dan dikonversi ke uint8. Respons negatif HPF dipotong ke nol.
 
-Empat PNG tambahan adalah visualisasi perbandingan: `perbandingan_lpf.png`, `perbandingan_hpf.png` (lima panel, 12?4 inci), `perbandingan_median.png`, dan `perbandingan_gaussian.png` (tiga panel, 12?8 inci). Visualisasi disimpan pada 150 dpi. Runner menyimpan seluruh output sebelum membuka empat visualisasi dengan satu `plt.show()`.
-
-## Laporan
-
-- [Tugas 1 - Image Filtering (LPF & HPF)](docs/LAPORAN_TUGAS_1.md)
-- [Tugas 2 - Image Filtering (Median dan Gaussian)](docs/LAPORAN_TUGAS_2.md)
+Empat PNG tambahan adalah visualisasi perbandingan: `perbandingan_lpf.png`, `perbandingan_hpf.png` (lima panel, 12x4 inci), `perbandingan_median.png`, dan `perbandingan_gaussian.png` (tiga panel, 12x8 inci). Visualisasi disimpan pada 150 dpi. Runner menyimpan seluruh output sebelum membuka empat visualisasi dengan satu `plt.show()`.
 
 ## Verifikasi
 

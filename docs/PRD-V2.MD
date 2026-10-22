@@ -27,7 +27,7 @@ Project dijalankan melalui terminal VS Code dan menampilkan hasil menggunakan Ma
 ```text
 digital-image-filtering/
 ├── images/
-│   └── living.jpg
+│   └── tayama.jpg
 ├── filters/
 │   ├── __init__.py
 │   ├── low_pass.py
@@ -219,7 +219,7 @@ Setiap file Python mengikuti pola:
 
 1. Import library.
 2. Membuat folder `outputs`.
-3. Membaca gambar `images/living.jpg` menggunakan `cv2.IMREAD_GRAYSCALE`.
+3. Membaca gambar `images/tayama.jpg` menggunakan `cv2.IMREAD_GRAYSCALE`.
 4. Memvalidasi gambar input.
 5. Menampilkan ukuran dan tipe data citra.
 6. Menambahkan noise sesuai kebutuhan praktikum.
