@@ -44,7 +44,34 @@ Seluruh metode menerima Salt and Pepper Noise identik: generator lokal `default_
 
 Semua hasil berada di `outputs/`. LPF/HPF menggunakan `CV_32F` dan `BORDER_CONSTANT` (padding nol). LPF dibulatkan dengan `np.rint`, sedangkan HPF dengan `np.floor(response + 0.5)`; keduanya dibatasi ke 0-255 dan dikonversi ke uint8. Respons negatif HPF dipotong ke nol.
 
-Empat PNG tambahan adalah visualisasi perbandingan: `perbandingan_lpf.png`, `perbandingan_hpf.png` (lima panel, 12x4 inci), `perbandingan_median.png`, dan `perbandingan_gaussian.png` (tiga panel, 12x8 inci). Visualisasi disimpan pada 150 dpi. Runner menyimpan seluruh output sebelum membuka empat visualisasi dengan satu `plt.show()`.
+## Gambar perbandingan
+
+Selain delapan citra hasil filter, program menyimpan empat gambar perbandingan di `outputs/`. Setiap gambar menggabungkan citra asli, citra noisy, dan hasil filtering dalam satu file PNG.
+
+| Metode | File perbandingan | Isi panel |
+| --- | --- | --- |
+| LPF | [perbandingan_lpf.png](outputs/perbandingan_lpf.png) | Asli, noisy, LPF 1, LPF 2, LPF 3 |
+| HPF | [perbandingan_hpf.png](outputs/perbandingan_hpf.png) | Asli, noisy, HPF 1, HPF 2, HPF 3 |
+| Median | [perbandingan_median.png](outputs/perbandingan_median.png) | Asli, noisy, Median 3x3 |
+| Gaussian | [perbandingan_gaussian.png](outputs/perbandingan_gaussian.png) | Asli, noisy, Gaussian 3x3 |
+
+LPF dan HPF menggunakan figure 12x4 inci (lima panel), sedangkan Median dan Gaussian menggunakan figure 12x8 inci (tiga panel). Semua visualisasi disimpan pada 150 dpi. Perintah `python run_all.py --no-show` tetap menghasilkan seluruh 12 PNG tanpa membuka jendela. Tanpa `--no-show`, runner menyimpan seluruh output sebelum menampilkan empat visualisasi.
+
+### Low Pass Filter
+
+![Perbandingan citra asli, noisy, dan tiga hasil LPF](outputs/perbandingan_lpf.png)
+
+### High Pass Filter
+
+![Perbandingan citra asli, noisy, dan tiga hasil HPF](outputs/perbandingan_hpf.png)
+
+### Median Filter
+
+![Perbandingan citra asli, noisy, dan hasil Median Filter](outputs/perbandingan_median.png)
+
+### Gaussian Filter
+
+![Perbandingan citra asli, noisy, dan hasil Gaussian Filter](outputs/perbandingan_gaussian.png)
 
 ## Verifikasi
 
